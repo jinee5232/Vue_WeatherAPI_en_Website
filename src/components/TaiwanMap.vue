@@ -142,9 +142,9 @@ export default {
 .taiwan-svg {
   width: auto;
   height: 100%;
-  max-height: 80vh; /* Scaled down to avoid cropping */
+  max-height: 65vh; /* Guaranteed to fit on laptops */
   filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 }
 
 .county {

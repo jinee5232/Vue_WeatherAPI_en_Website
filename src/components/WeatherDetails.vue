@@ -1,7 +1,7 @@
 <template>
-  <div v-if="data && data.main" class="grid grid-cols-1 sm:grid-cols-2 gap-5 animate-fade-in-up">
+  <div v-if="data && data.main" class="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-fade-in-up">
     <div v-for="(item, index) in details" :key="index" 
-      class="flex items-center gap-6 px-7 py-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-3xl hover:bg-white/10 transition-all group shadow-2xl"
+      class="flex items-center gap-6 px-5 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-3xl hover:bg-white/10 transition-all group shadow-2xl"
     >
       <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center group-hover:scale-105 group-hover:bg-white/10 transition-all duration-300 flex-shrink-0">
         <span class="material-symbols-rounded text-white/60 text-[22px]">{{ item.icon }}</span>

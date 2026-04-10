@@ -1,6 +1,6 @@
 <template>
   <div id="home-view" :class="[bgClass, 'min-h-screen w-full overflow-hidden transition-all duration-700 bg-cover bg-center']">
-    <div class="min-h-screen w-full p-4 md:p-8 bg-black/30 flex flex-col">
+    <div class="min-h-screen w-full p-4 md:p-8 md:pb-0 bg-black/30 flex flex-col">
       
       <!-- Top Bar -->
       <header class="flex justify-center items-center w-full mb-8 relative">
@@ -28,9 +28,9 @@
         
         <!-- Taiwan Dashboard Structure (3 Columns Balanced) -->
         <template v-if="apiSource === 'taiwan' && isDesktop && viewMode === 'details' && weather">
-          <div class="flex flex-row items-center justify-center gap-12 h-full px-8 animate-fade-in">
-            <!-- Column 1: Map (Lighter weight) -->
-            <div class="flex-[1] flex items-center justify-center h-full">
+          <div class="flex-1 flex flex-row items-center justify-center gap-8 min-h-0 w-full px-8 animate-fade-in overflow-hidden">
+            <!-- Column 1: Map (Scales with height) -->
+            <div class="flex-[1.2] flex items-center justify-center min-h-0">
               <TaiwanMap 
                 :activeCounty="selectedCounty"
                 :availableCounties="availableCounties"
@@ -39,16 +39,16 @@
               />
             </div>
 
-            <!-- Consolidated Info Group (Wider & More Space) -->
-            <div class="flex-[1.5] flex flex-row items-center gap-12 rounded-[56px] backdrop-blur-3xl shadow-3xl px-20">
-              <!-- Column 2: Hero Square Card -->
+            <!-- Consolidated Info Group (Wider & Adaptive) -->
+            <div class="flex-[2] flex flex-row items-center gap-10 rounded-[48px] backdrop-blur-3xl shadow-3xl px-12 py-6 bg-white/5 border border-white/10">
+              <!-- Column 2: Hero Square Card (Responsive Size) -->
               <div class="flex-shrink-0">
                 <WeatherCard 
                   :data="weather" 
                   :currentDate="currentDate" 
                   :lang="lang" 
                   :loading="loading"
-                  class="w-[550px] h-[550px] !rounded-[3rem] shadow-2xl"
+                  class="w-[38vh] h-[38vh] md:w-[50vh] md:h-[50vh] max-w-[500px] max-h-[500px] !rounded-[3rem] shadow-2xl"
                 />
               </div>
 
@@ -90,9 +90,14 @@
               />
             </div>
 
-            <!-- Global Detail Card with Compact Layout (Centered) -->
+            <!-- Global Detail Card with Smart Responsive Layout (Auto-toggles based on height) -->
             <div v-if="weather && weather.main && (viewMode === 'details' || apiSource === 'global')" 
-                 class="w-full max-w-[850px] flex flex-col items-center justify-center gap-8 animate-fade-in py-10">
+                 :class="[
+                   'animate-fade-in w-full mx-auto min-h-0',
+                   isDesktop && isShortScreen 
+                     ? 'flex flex-row items-center justify-center gap-12 max-w-[1100px] px-8' 
+                     : 'flex flex-col items-center justify-center gap-8 max-w-[850px] py-4'
+                 ]">
               
               <button 
                 v-if="!isDesktop && apiSource === 'taiwan' && viewMode === 'details'" 
@@ -108,13 +113,16 @@
                 :currentDate="currentDate" 
                 :lang="lang" 
                 :loading="loading"
-                class="w-full !rounded-[2.5rem] shadow-[0_24px_48px_rgba(0,0,0,0.4)]"
+                :class="[
+                  '!rounded-[3rem] shadow-[0_24px_48px_rgba(0,0,0,0.4)]',
+                  isDesktop && isShortScreen ? 'w-[45vh] h-[45vh] max-w-[450px]' : 'w-[50vh] h-[50vh] max-w-[500px]'
+                ]"
               />
 
               <WeatherDetails 
                 :data="weather" 
                 :lang="lang" 
-                class="w-full"
+                class="w-full flex-1"
               />
 
               <!-- Mobile Town Selector (Compact) -->
@@ -192,6 +200,7 @@ export default {
       selectedCounty: '',
       selectedTown: '',
       isDesktop: window.innerWidth > 1024,
+      isShortScreen: window.innerHeight < 820,
       countySummary: {},
       gpsLocation: null,
     };
@@ -321,6 +330,7 @@ export default {
     },
     handleResize() {
       this.isDesktop = window.innerWidth > 1024;
+      this.isShortScreen = window.innerHeight < 820;
     }
   },
   async created() {
